@@ -10,9 +10,9 @@ const taskSchema = new Schema({
     description: {
         type: String,
     },
-    completed: { 
-        type: Boolean,
-    },
+    // completed: { 
+    //     type: Boolean,
+    // },
     // using built in method to get current date
     // TODO USE DATE METHOD TO SHOW MM/DD/YYYY
     dueDate: {

@@ -53,13 +53,13 @@ const resolvers = {
         },
 
         // add task
-        addTask: async (parent, { title, description, dueDate }) => {
-            const task = await task.create({ title, description, dueDate });
+        addTask: async (parent, { title, description, priority, dueDate }) => {
+            const task = await Task.create({ title, description, priority, dueDate });
             return task;
         },
         // remove task
         removeTask: async (parent, { taskID }) => {
-            const task = await task.findOneAndDelete({ _id: taskID });
+            const task = await Task.findOneAndDelete({ _id: taskID });
             return `${task}, task deleted!`;
         },
         // update task

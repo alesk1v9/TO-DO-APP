@@ -4,7 +4,7 @@ const typeDefs = `
         title: String!
         description: String
         dueDate: String
-        completed: Boolean!
+        priority: String
     }
 
     type User {
@@ -41,7 +41,7 @@ type Mutation {
 
     login(emial: String!, password: String!): AuthPayload
 
-    addTask(title: String!, description: String, dueDate: String): Task
+    addTask(title: String!, description: String, dueDate: String, priority: String): Task
 
     removeTask(taskID: ID!): String
 
