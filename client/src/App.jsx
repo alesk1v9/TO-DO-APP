@@ -23,7 +23,7 @@ const httpLink = createHttpLink({
 
 
 // NOT NEEDED ANYMORE DELETE LATER
-const errorLink = onError(({ graphQLErrors, networkError }) => { if (graphQLErrors) graphQLErrors.forEach(({ message, locations, path }) => console.log( `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`, ), ); if (networkError) console.log(`[Network error]: ${networkError}`); });
+// const errorLink = onError(({ graphQLErrors, networkError }) => { if (graphQLErrors) graphQLErrors.forEach(({ message, locations, path }) => console.log( `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`, ), ); if (networkError) console.log(`[Network error]: ${networkError}`); });
 
 
 
@@ -44,8 +44,8 @@ const authLink = setContext((_, { headers }) => {
 // execute authLink middleware prior making the request to the graphql API
 //  set up cache mechanism w in memory cache
 const client = new ApolloClient({
-  link: from([errorLink, authLink, httpLink]), 
-  // link: authLink.concat(httpLink), put it back later
+  // link: from([errorLink, authLink, httpLink]), 
+  link: authLink.concat(httpLink), 
   cache: new InMemoryCache(),
 });
 

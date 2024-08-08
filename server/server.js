@@ -3,6 +3,8 @@ const express = require('express');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const { AuthenticationError } = require('apollo-server-errors');
 
 const { typeDefs, resolvers } = require('./schemas');
 
@@ -12,7 +14,20 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 const server = new ApolloServer({
     typeDefs,
-    resolvers,
+    resolvers
+    // context: ({ req }) => {
+    //     const token = req.headers.authorization || '';
+    //     let user = null;
+    //     if (token) {
+    //         try {
+    //             user = jwt.verify(token.split(' ')[1], secret).data;
+    //         } catch (e) {
+    //             throw new AuthenticationError('Invalid or expired token');
+    //         }
+    //     }
+
+    //     return { user };
+    // }
 });
 
 

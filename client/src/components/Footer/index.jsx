@@ -1,11 +1,12 @@
-const Footer = () => {
+function Footer() {
     return (
-        <>
-            <footer>
-                <h1>Footer</h1>
-            </footer>
-        </>
-    )
-};
-
-export default Footer;
+      <footer>
+        <h2>Made by Alexsander©</h2>
+        <p> 
+            <a href="https://github.com/alesk1v9"></a>
+        </p>
+      </footer>
+    );
+  }
+  
+  export default Footer;

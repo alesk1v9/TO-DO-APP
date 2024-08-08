@@ -24,13 +24,34 @@ mutation login($email: String!, $password: String!) {
 
 // add task
 export const ADD_TASK = gql`
-  mutation addTask($title: String!, $description: String, $priority: String, $dueDate: String) {
-    addTask(title: $title, description: $description, priority: $priority, dueDate: $dueDate) {
+  mutation addTask($title: String!, $createdBy: String,  $description: String, $priority: String, $dueDate: String) {
+    addTask(title: $title, createdBy: $createdBy, description: $description, priority: $priority, dueDate: $dueDate) {
         _id
         title
+        createdBy
         description
         dueDate
         priority
     }
   }
 `;
+
+// remove task
+export const DELETE_TASK = gql`
+  mutation removeTask($taskID: ID!){
+    removeTask(taskID: $taskID)
+    }
+`;
+
+// update task
+export const UPDATE_TASK = gql`
+  mutation updateTask($taskID: ID!, $title: String!, $description: String, $priority: String, $dueDate: String){
+    updateTask(title: $title, description: $description, priority: $priority, dueDate: $dueDate) {
+        _id
+        title
+        description
+        dueDate
+        priority
+    }
+}
+`

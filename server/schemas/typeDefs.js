@@ -2,6 +2,7 @@ const typeDefs = `
     type Task {
         _id: ID,
         title: String!
+        createdBy: String
         description: String
         dueDate: String
         priority: String
@@ -39,13 +40,13 @@ type Mutation {
 
     addUser(username: String!, email: String!, password: String!): AuthPayload
 
-    login(emial: String!, password: String!): AuthPayload
+    login(email: String!, password: String!): AuthPayload
 
-    addTask(title: String!, description: String, dueDate: String, priority: String): Task
+    addTask(title: String!, createdBy: String, description: String, dueDate: String, priority: String): Task
 
     removeTask(taskID: ID!): String
 
-    updateTask(taskID: ID!, title: String, description: String, dueDate: String): Task
+    updateTask(taskID: ID!, title: String!, description: String, priority: String, dueDate: String): Task
 }
 `
 

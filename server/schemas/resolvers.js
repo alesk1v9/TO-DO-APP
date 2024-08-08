@@ -1,6 +1,7 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
-const { signToken, AuthenticationError } = require('../utils/auth');
+const { signToken } = require('../utils/auth');
+const { AuthenticationError } = require('apollo-server-errors')
 
 const resolvers = {
     // queries to read and retrieve data from db
@@ -11,11 +12,15 @@ const resolvers = {
         },
         // returns one user found by username and its tasks
         user: async (parent, { username }) => {
-            return await User.findOne({ username }).populate('tasks');
+            const user = await User.findOne({ username }).populate('tasks');
+            if (user) {
+                user.tasks = await Task.find({ createdBy: username });
+            }
+            return user;
         },
         // returns all tasks from a specific user found by username ans sort using createdAt
         tasks: async (parent, { username }) => {
-            const params = username ? { username } : {};
+            const params = username ? { createdBy: username } : {};
             return Task.find(params).sort({ createdAt: -1 });
         },
         // returns one task by its ID
@@ -35,7 +40,7 @@ const resolvers = {
         // logs in and returns a jwt token if password and email are correct 
         // otherwise returns an authentication error
         login: async (parent, {email, password }) => {
-            const user = await findOne({ email });
+            const user = await User.findOne({ email });
 
             if (!user) {
                 throw AuthenticationError;
@@ -53,8 +58,14 @@ const resolvers = {
         },
 
         // add task
-        addTask: async (parent, { title, description, priority, dueDate }) => {
-            const task = await Task.create({ title, description, priority, dueDate });
+        addTask: async (parent, { title, createdBy, description, priority, dueDate }) => {
+
+            const task = await Task.create({ 
+                    title,
+                    createdBy,
+                    description,
+                    priority,
+                    dueDate });
             return task;
         },
         // remove task
@@ -69,6 +80,7 @@ const resolvers = {
                 { $set: req.body },
                 { runValidators: true, new: true }
             );
+            return `${task} was updated!`
         },
     },
 };
