@@ -1,7 +1,6 @@
 import { FaTrash,FaEdit } from 'react-icons/fa';
 
-
-const TaskList = ({ username, tasks, deleteBtnHandler }) => { // use props to access data from parent component
+const TaskList = ({ username, tasks, deleteBtnHandler, updateBtnHandler }) => { // use props to access data from parent component
   if (!tasks.length) { // verify if there is any task to display
     return <h3>No tasks yet</h3>;
   }
@@ -25,7 +24,7 @@ const TaskList = ({ username, tasks, deleteBtnHandler }) => { // use props to ac
               <p>{task.description}</p>
             </div>
             <div>
-              <FaEdit /> <FaTrash onClick={() => deleteBtnHandler(task._id)}/>
+              <FaEdit onClick={() => updateBtnHandler(task._id)}/> <FaTrash onClick={() => deleteBtnHandler(task._id)}/>
             </div>
           </div>
         );

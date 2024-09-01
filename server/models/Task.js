@@ -10,10 +10,9 @@ const taskSchema = new Schema({
     description: {
         type: String,
     },
-    // TODO USE DATE METHOD TO SHOW MM/DD/YYYY
     dueDate: {
         type: Date, 
-        default: Date.now,
+        default: () => new Date(),
     },
     createdBy:
      {

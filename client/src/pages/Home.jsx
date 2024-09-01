@@ -1,6 +1,5 @@
 import { QUERY_USER } from "../utils/queries";
 import { DELETE_TASK } from "../utils/mutations";
-import { UPDATE_TASK } from "../utils/mutations";
 
 import { useQuery, useMutation } from "@apollo/client";
 import Auth from "../utils/auth";
@@ -9,7 +8,7 @@ import TaskList from "../components/TaskList/index";
 import TaskForm from "../components/TaskForm/index";
 
 import React, { useState, useEffect } from "react"; // useState hook for state control // useEffect for side effects ehrn building the component
-import { useNavigate } from "react-router-dom"; // useNavigate hook for navigation control
+import { Await, useNavigate } from "react-router-dom"; // useNavigate hook for navigation control
 
 const Home = () => {
 
@@ -39,13 +38,11 @@ const Home = () => {
     // add new task function
     const addTask = (newTask) => {
         setTasks([...tasks, newTask]); // Append the new task to the existing tasks
-        console.log(tasks);
+        
     };
-
     // delete task function
     const [deleteTaskMutation] = useMutation(DELETE_TASK);
     const deleteBtnHandler = async (taskID) => {
-
         // when btn clicked the current task gets deleted from ui and db
         try {
             const { data } = await deleteTaskMutation({ variables: { taskID } });
@@ -56,29 +53,14 @@ const Home = () => {
         }
     }
 
-    // update task function
-    // const [updateTaskMutation] = useMutation(UPDATE_TASK);
-    // const updateBtnHandler = async (taskID) => {
-
-    //     const variables = {
-    //         id: taskID,
-    //         title: task.title,
-    //         description: task.description,
-    //         priority: task.priority,
-    //         dueDate: task.dueDate
-    //     }
-    //     try {
-    //         const { data } = await updateTaskMutation({ variables });
-
-    //         const updatedTask = data.updateTask;
-
-    //         setTasks(prevTasks => prevTasks.map(task => 
-    //             task.id === taskID ? updatedTask : task
-    //         ));
-    //     } catch (error) {
-    //         console.log(`Error updating task: ${error}!`)
-    //     }
-    // }
+    // update task function - NOT WORKING
+    
+    const [taskToEdit, setTaskToEdit] = useState(null);
+    const updateBtnHandler = async (taskID) => {
+        console.log(taskID);
+        const task = tasks.find(task => task._id === taskID);
+        setTaskToEdit(task);
+    }
 
     return (
         <main>
@@ -87,14 +69,14 @@ const Home = () => {
                     className="col-12 col-md-10 mb-3 p-3"
                     style={{ border: '1px dotted #1a1a1a' }}
                 >
-                    <TaskForm addTask={addTask} /> {/* pass addTask as a prop to use on TaskForm component*/}
+                    <TaskForm addTask={addTask}  taskToEdit={taskToEdit} setTaskToEdit={setTaskToEdit}/> {/* pass addTask as a prop to use on TaskForm component*/}
                 </div>
                 <div className="col-12 col-md-8 mb-3">
                     {loading ? (
                         <div>Loading...</div>
                     ) : (
                         <TaskList deleteBtnHandler={deleteBtnHandler}
-                            // updateBtnHandler={updateBtnHandler}
+                            updateBtnHandler={updateBtnHandler}
                             username={username}
                             tasks={tasks} // pass delete fn, username and tasks as props to be used in TaskList component
                         />

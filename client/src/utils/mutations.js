@@ -50,8 +50,8 @@ export const UPDATE_TASK = gql`
         _id
         title
         description
-        dueDate
         priority
+        dueDate
     }
 }
 `

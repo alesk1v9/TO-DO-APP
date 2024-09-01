@@ -1,15 +1,62 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_TASK } from "../../utils/mutations";
+import { UPDATE_TASK } from "../../utils/mutations";
 import Auth from "../../utils/auth";
+import moment from "moment"; 
 
-const TaskForm = ({ addTask }) => {
+const TaskForm = ({ addTask, taskToEdit, setTaskToEdit }) => {
     const [todo, setTodo] = useState({
         title: '',
         description: '',
         priority: '',
         dueDate: ''
     });
+
+    useEffect(() => {
+        if (taskToEdit) {
+            setTodo({
+                title: taskToEdit.title,
+                description: taskToEdit.description,
+                priority: taskToEdit.priority,
+                dueDate: moment(+taskToEdit.dueDate).format('YYYY-MM-DD'), //transform dueDate to number and convert the date using moment
+            });
+        }
+    }, [taskToEdit]);
+
+    const [updateTaskMutation] = useMutation(UPDATE_TASK);
+
+    const updateTask = async (taskID) => {
+        
+        try {
+            const { data } = await updateTaskMutation({ 
+                variables: {
+                    taskID: taskToEdit._id,
+                    title: todo.title,
+                    description: todo.description,
+                    priority: todo.priority,
+                    dueDate: moment(todo.dueDate).valueOf().toString(), // transform dueDate back to string using moment
+                }
+             });
+             console.log("Updated Task:", data.updateTask);
+             
+            setTasks(tasks.map(task => task._id === taskToEdit._id ? data.updateTask : task));
+
+            setTaskToEdit(null);
+
+            setTodo({
+                title: '',
+                description: '',
+                dueDate: '',
+                priority: ''
+            });
+        } catch (error) {
+            console.log('GraphQL Error:', error.graphQLErrors);
+            console.log('Network Error:', error.networkError);
+            console.log('Message:', error.message);
+        }
+    }
+    
 
     const [addTaskMutation, { error }] = useMutation(ADD_TASK); // set up useMutation hook for adding tasks
             // addTaskMutation will be used to send the data from the input form to the server
@@ -46,7 +93,7 @@ const TaskForm = ({ addTask }) => {
     };
 
     return (
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={taskToEdit ? updateTask : handleFormSubmit}>
             <div className="mb-3">
                 <label className="form-label">Title</label>
                 <input
@@ -92,7 +139,14 @@ const TaskForm = ({ addTask }) => {
                 />
             </div>
 
-            <button type="submit" className="btn btn-primary">Submit</button>
+            {taskToEdit ? (
+                <button type="submit" className="btn btn-primary" onClick={updateTask}> Save </button>
+            ) : (
+                <button type="submit" className="btn btn-primary" onClick={handleFormSubmit}> Submit </button>
+            )}
+
+            
+            {/* APPEAR SAVE BTN TO SAVE CHANGES ON UPDATE */}
             {error && <div className="alert alert-danger mt-3">Submission failed. Please try again.</div>}
         </form>
 
@@ -100,4 +154,3 @@ const TaskForm = ({ addTask }) => {
 };
 
 export default TaskForm;
-

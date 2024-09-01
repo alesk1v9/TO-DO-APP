@@ -74,13 +74,19 @@ const resolvers = {
             return `${task}, task deleted!`;
         },
         // update task
-        updateTask: async (parent, { taskID }) => {
-            const task = await task.findOneAndUpdate(
+        updateTask: async (parent, { taskID, title, description, priority, dueDate }) => {
+            const task = await Task.findOneAndUpdate(
                 { _id: taskID },
-                { $set: req.body },
+                { $set: {
+                    title,
+                    description,
+                    priority,
+                    dueDate
+                }
+             },
                 { runValidators: true, new: true }
             );
-            return `${task} was updated!`
+            return task;
         },
     },
 };
