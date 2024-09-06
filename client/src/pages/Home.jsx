@@ -1,16 +1,25 @@
 import { QUERY_USER } from "../utils/queries";
 import { DELETE_TASK } from "../utils/mutations";
+import { UPDATE_TASK } from "../utils/mutations";
+import { ADD_TASK } from "../utils/mutations";
 
 import { useQuery, useMutation } from "@apollo/client";
 import Auth from "../utils/auth";
 
-import TaskList from "../components/TaskList/index";
-import TaskForm from "../components/TaskForm/index";
-
 import React, { useState, useEffect } from "react"; // useState hook for state control // useEffect for side effects ehrn building the component
 import { Await, useNavigate } from "react-router-dom"; // useNavigate hook for navigation control
+import moment from "moment"; 
+
+import { FaTrash,FaEdit } from 'react-icons/fa';
 
 const Home = () => {
+
+    const [todo, setTodo] = useState({
+        title: '',
+        description: '',
+        priority: '',
+        dueDate: ''
+    });
 
     const navigate = useNavigate();
     const [tasks, setTasks] = useState([]); // define the initial state of tasks as an empty array
@@ -21,10 +30,6 @@ const Home = () => {
         }
     }, []); // this 2nd argument is an array of dependencies but as it needs
     // to be checked only one time when the component mounts, the array is empty
-
-    if (!Auth.loggedIn()) { // Double-check if the user is not logged in
-        return <p>You need to log in to see this page.</p>; // Show message if user is not logged in
-    }
 
     const username = Auth.getProfile().data.username; //get username
 
@@ -38,8 +43,41 @@ const Home = () => {
     // add new task function
     const addTask = (newTask) => {
         setTasks([...tasks, newTask]); // Append the new task to the existing tasks
-        
     };
+
+const [addTaskMutation] = useMutation(ADD_TASK); // set up useMutation hook for adding tasks
+    // addTaskMutation will be used to send the data from the input form to the server
+const handleFormSubmit = async (e) => {
+e.preventDefault();
+
+const user = Auth.getProfile(); // get logged in user
+
+try {
+    const { data } = await addTaskMutation({
+        variables: {
+            title: todo.title,
+            createdBy: user.data.username, // set logged in user as the creator of the new task
+            description: todo.description,
+            dueDate: todo.dueDate,
+            priority: todo.priority,
+        },
+    });
+
+    
+    const newTask = data.addTask; // store the newly created task in a variable
+    addTask(newTask); // addTask function process form using the user's input data 
+
+    // Clear form fields after successful submission
+    setTodo({
+        title: '',
+        description: '',
+        dueDate: '',
+        priority: ''
+    });
+} catch (error) {
+    console.error(error);
+}
+}
     // delete task function
     const [deleteTaskMutation] = useMutation(DELETE_TASK);
     const deleteBtnHandler = async (taskID) => {
@@ -53,35 +91,155 @@ const Home = () => {
         }
     }
 
-    // update task function - NOT WORKING
-    
-    const [taskToEdit, setTaskToEdit] = useState(null);
+    // update task function
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingTaskID, setEditingTaskID] = useState(null);
+
+    const [updateTaskMutation] = useMutation(UPDATE_TASK);
     const updateBtnHandler = async (taskID) => {
         console.log(taskID);
+        try {
+            const task = tasks.find(task => task._id === taskID);
+            const dueDate = moment(+task.dueDate).format('YYYY-MM-DD');
+            console.log(task);
+            setTodo({
+                title: task.title,
+                description: task.description,
+                dueDate: dueDate,
+                priority: task.priority
+            });
+
+            setEditingTaskID(taskID);
+            setIsEditing(true);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const saveBtnHandler = async (taskID) => {
+        
         const task = tasks.find(task => task._id === taskID);
-        setTaskToEdit(task);
+        
+        try {
+            const { data } = await updateTaskMutation({
+                variables: {
+                    taskID: taskID,
+                    title: todo.title,
+                    description: todo.description,
+                    priority: todo.priority,
+                    dueDate: moment(todo.dueDate).valueOf().toString(), // transform dueDate back to string using moment
+                }
+            });
+
+            setTasks(tasks.map(task => task._id === taskID ? data.updateTask : task));
+
+            setTodo({
+                title: '',
+                description: '',
+                dueDate: '',
+                priority: ''
+            });
+
+            setIsEditing(false);
+            setEditingTaskID(null);
+
+        } catch (error) {
+            console.log('GraphQL Error:', error.graphQLErrors);
+            console.log('Network Error:', error.networkError);
+            console.log('Message:', error.message);
+        }
     }
 
     return (
         <main>
             <div className="flex-row justify-center">
-                <div
-                    className="col-12 col-md-10 mb-3 p-3"
-                    style={{ border: '1px dotted #1a1a1a' }}
+                <div>
+                <form>
+            <div className="mb-3">
+                <label className="form-label">Title</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Title"
+                    value={todo.title} // set the value using the input form title added by user
+                    onChange={e => setTodo({ ...todo, title: e.target.value })} // update the state when title input changes
+                />
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Description</label>
+                <textarea
+                    className="form-control"
+                    placeholder="Description"
+                    value={todo.description}
+                    onChange={e => setTodo({ ...todo, description: e.target.value })}
+                />
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Priority</label>
+                <select
+                    className="form-control"
+                    value={todo.priority}
+                    onChange={e => setTodo({ ...todo, priority: e.target.value })}
                 >
-                    <TaskForm addTask={addTask}  taskToEdit={taskToEdit} setTaskToEdit={setTaskToEdit}/> {/* pass addTask as a prop to use on TaskForm component*/}
+                    <option value="">Priority</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Date</label>
+                <input
+                    type="date"
+                    className="form-control"
+                    value={todo.dueDate}
+                    onChange={e => setTodo({ ...todo, dueDate: e.target.value })}
+                />
+            </div>
+            {isEditing ? <button onClick={() => saveBtnHandler(editingTaskID)} className="btn btn-primary"> Save </button>
+             : <button onClick={handleFormSubmit} className="btn btn-primary"> Submit </button>}
+            
+            
+            {/* APPEAR SAVE BTN TO SAVE CHANGES ON UPDATE */}
+            {error && <div className="alert alert-danger mt-3">Submission failed. Please try again.</div>}
+        </form>
                 </div>
+                {tasks.length ? 
                 <div className="col-12 col-md-8 mb-3">
-                    {loading ? (
-                        <div>Loading...</div>
-                    ) : (
-                        <TaskList deleteBtnHandler={deleteBtnHandler}
-                            updateBtnHandler={updateBtnHandler}
-                            username={username}
-                            tasks={tasks} // pass delete fn, username and tasks as props to be used in TaskList component
-                        />
-                    )}
-                </div>
+                {loading ? (
+                    <div>Loading...</div>
+                ):(
+                    
+                    tasks.map((task) => { // iterate over all tasks and render a div with task data
+        
+                        const dueDate = new Date(parseInt(task.dueDate)); // Convert dueDate to a Date object
+                
+                        return (
+                          <div key={task._id} className="note">
+                            <h4 className="card-header bg-primary text-light p-2 m-0">
+                              {task.title} <br />
+                              <span style={{ fontSize: '1rem' }}>
+                                this task due on {dueDate.toLocaleDateString()} priority {task.priority}
+                              </span>
+                            </h4>
+                            <div className="card-body bg-light p-2">
+                              <p>{task.description}</p>
+                            </div>
+                            <div>
+                              <FaEdit onClick={() => updateBtnHandler(task._id)}/> <FaTrash onClick={() => deleteBtnHandler(task._id)}/>
+                            </div>
+                          </div>
+                       ) 
+                      })
+                )}
+            </div> : []
+            }
+                
             </div>
         </main>
     );

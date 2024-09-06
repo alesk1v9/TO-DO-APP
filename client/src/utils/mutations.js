@@ -46,7 +46,7 @@ export const DELETE_TASK = gql`
 // update task
 export const UPDATE_TASK = gql`
   mutation updateTask($taskID: ID!, $title: String!, $description: String, $priority: String, $dueDate: String){
-    updateTask(title: $title, description: $description, priority: $priority, dueDate: $dueDate) {
+    updateTask(taskID: $taskID , title: $title, description: $description, priority: $priority, dueDate: $dueDate) {
         _id
         title
         description

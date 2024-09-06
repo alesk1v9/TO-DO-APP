@@ -75,6 +75,7 @@ const resolvers = {
         },
         // update task
         updateTask: async (parent, { taskID, title, description, priority, dueDate }) => {
+            
             const task = await Task.findOneAndUpdate(
                 { _id: taskID },
                 { $set: {
@@ -86,6 +87,7 @@ const resolvers = {
              },
                 { runValidators: true, new: true }
             );
+            console.log('Updated task:', task);
             return task;
         },
     },
