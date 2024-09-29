@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+// import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LOGIN_USER } from "../utils/mutations";
+// import { useNavigate } from "react-router-dom";
+
 
 import Auth from "../utils/auth";
 
@@ -19,7 +21,6 @@ const Login = (props) => {
             [name]: value,
         });
     };
-    
     
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -40,24 +41,17 @@ const Login = (props) => {
             password: "",
         });
     };
-    
 
     return (
       // if data loads correct redict to home page otherwise shows form again
-        <main className="flex-row justify-center mb-4">
-          <div className="col-12 col-lg-10">
+        <main className="d-flex flex-column align-items-center m-3">
+          <div className="col-6">
             <div className="card">
-              <h4 className="card-header bg-dark text-light p-2">Login</h4>
+              <h4 className="card-header text-center bg-primary text-light p-2">Login</h4>
               <div className="card-body">
-                {data ? (
-                  <p>
-                    Success! You may now head{' '}
-                    <Link to="/">back to the homepage.</Link>
-                  </p>
-                ) : (
-                  <form onSubmit={handleFormSubmit}>
+                  <form className="d-flex flex-column m-3" onSubmit={handleFormSubmit}>
                     <input
-                      className="form-input"
+                      className="form-input form-control m-3"
                       placeholder="Your email"
                       name="email"
                       type="email"
@@ -65,22 +59,21 @@ const Login = (props) => {
                       onChange={handleChange}
                     />
                     <input
-                      className="form-input"
-                      placeholder="******"
+                      className="form-input form-control m-3"
+                      placeholder="********"
                       name="password"
                       type="password"
                       value={formState.password}
                       onChange={handleChange}
                     />
                     <button
-                      className="btn btn-block btn-primary"
-                      style={{ cursor: 'pointer' }}
+                      className="btn btn-primary m-3"
                       type="submit"
                     >
                       Submit
                     </button>
                   </form>
-                )}
+                
     
                 {error && (
                   <div className="my-3 p-3 bg-danger text-white">

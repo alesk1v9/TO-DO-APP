@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 // createBrowserRouter is being used to specify which component will be render for each URL
 // RouterProvider will enable the router to be used in the app
 import App from './App.jsx'
@@ -10,6 +10,8 @@ import Login from "./pages/login.jsx";
 import Home from "./pages/Home.jsx";
 import Signup from "./pages/Signup.jsx";
 
+import Auth from "../src/utils/auth.js";
+
 // create a router object with route definitions
 const router = createBrowserRouter([
   {
@@ -18,12 +20,12 @@ const router = createBrowserRouter([
     children: [ // nested routes
       {
         index: true, // default route
-        element: <Home />
+        element: Auth.loggedIn() ? <Home /> : <Navigate to="/login"/>,
       }, {
         path: '/login',
         element: <Login />
       }, {
-        path: 'signup',
+        path: '/signup',
         element: <Signup />
       }
     ]

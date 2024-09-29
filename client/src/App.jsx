@@ -1,4 +1,6 @@
-import './App.css'
+// import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { 
   ApolloClient, // will be used to create a new client instance
   InMemoryCache, // caching mechanism to to strore results of graphql queries
@@ -57,7 +59,7 @@ function App() {
     <ApolloProvider client={client}> 
       <>
         <Header />
-        <Outlet />
+          <Outlet />
         <Footer />
       </>
     </ApolloProvider>

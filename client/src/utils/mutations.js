@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from "@apollo/client"; // import gql to write queries and mutations
 
 // add user
 export const ADD_USER = gql`

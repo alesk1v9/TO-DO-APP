@@ -1,20 +1,23 @@
+    // import mutations and queries
 import { QUERY_USER } from "../utils/queries";
 import { DELETE_TASK } from "../utils/mutations";
 import { UPDATE_TASK } from "../utils/mutations";
 import { ADD_TASK } from "../utils/mutations";
-
+    // graphQL hooks to use query and mutations on client side
 import { useQuery, useMutation } from "@apollo/client";
+    // import Authentication services
 import Auth from "../utils/auth";
-
+    // import react and hooks
 import React, { useState, useEffect } from "react"; // useState hook for state control // useEffect for side effects ehrn building the component
 import { Await, useNavigate } from "react-router-dom"; // useNavigate hook for navigation control
+    // import moment for Date control
 import moment from "moment"; 
-
+    // import Icons
 import { FaTrash,FaEdit } from 'react-icons/fa';
 
 const Home = () => {
 
-    const [todo, setTodo] = useState({
+    const [todo, setTodo] = useState({ // set the form state input values as empty
         title: '',
         description: '',
         priority: '',
@@ -22,13 +25,14 @@ const Home = () => {
     });
 
     const navigate = useNavigate();
+    
     const [tasks, setTasks] = useState([]); // define the initial state of tasks as an empty array
 
     useEffect(() => { // This piece of code will run every time the home is rendered and the side effect is if the user is not logged
         if (!Auth.loggedIn()) { // then navigate will take the user to /login thats why the useEffect is necessary 
             navigate("/login");
         }
-    }, []); // this 2nd argument is an array of dependencies but as it needs
+    }, [navigate]); // this 2nd argument is an array of dependencies but as it needs
     // to be checked only one time when the component mounts, the array is empty
 
     const username = Auth.getProfile().data.username; //get username
@@ -154,11 +158,11 @@ try {
 
     return (
         <main>
-            <div className="flex-row justify-center">
-                <div>
-                <form>
+            <div className="d-flex flex-column align-items-center m-3">
+                <div className="col-8 border border-3 rounded-3 border-primary m-3">
+                <form className="d-flex flex-column m-3">
             <div className="mb-3">
-                <label className="form-label">Title</label>
+                <label className="form-label text-primary border-1 border-primary border-bottom">Title</label>
                 <input
                     type="text"
                     className="form-control"
@@ -169,7 +173,7 @@ try {
             </div>
 
             <div className="mb-3">
-                <label className="form-label">Description</label>
+                <label className="form-label text-primary border-1 border-primary border-bottom">Description</label>
                 <textarea
                     className="form-control"
                     placeholder="Description"
@@ -179,7 +183,7 @@ try {
             </div>
 
             <div className="mb-3">
-                <label className="form-label">Priority</label>
+                <label className="form-label text-primary border-1 border-primary border-bottom">Priority</label>
                 <select
                     className="form-control"
                     value={todo.priority}
@@ -193,7 +197,7 @@ try {
             </div>
 
             <div className="mb-3">
-                <label className="form-label">Date</label>
+                <label className="form-label text-primary border-1 border-primary border-bottom">Date</label>
                 <input
                     type="date"
                     className="form-control"
