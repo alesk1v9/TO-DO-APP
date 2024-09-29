@@ -157,12 +157,12 @@ try {
     }
 
     return (
-        <main>
-            <div className="d-flex flex-column align-items-center m-3">
-                <div className="col-8 border border-3 rounded-3 border-primary m-3">
+        <main className="d-flex flex-column justify-content-center">
+            <div className="d-flex flex-column align-items-center justify-content-center">
+                <div className="col-8 border border-3 rounded-3 border-dark m-3">
                 <form className="d-flex flex-column m-3">
             <div className="mb-3">
-                <label className="form-label text-primary border-1 border-primary border-bottom">Title</label>
+                <label className="form-label text-dark border-1 border-dark border-bottom">Title</label>
                 <input
                     type="text"
                     className="form-control"
@@ -173,7 +173,7 @@ try {
             </div>
 
             <div className="mb-3">
-                <label className="form-label text-primary border-1 border-primary border-bottom">Description</label>
+                <label className="form-label text-dark border-1 border-dark border-bottom">Description</label>
                 <textarea
                     className="form-control"
                     placeholder="Description"
@@ -183,13 +183,13 @@ try {
             </div>
 
             <div className="mb-3">
-                <label className="form-label text-primary border-1 border-primary border-bottom">Priority</label>
+                <label className="form-label text-dark border-1 border-dark border-bottom">Priority</label>
                 <select
                     className="form-control"
                     value={todo.priority}
                     onChange={e => setTodo({ ...todo, priority: e.target.value })}
                 >
-                    <option value="">Priority</option>
+                    <option value="Priority">Priority</option>
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
@@ -197,7 +197,7 @@ try {
             </div>
 
             <div className="mb-3">
-                <label className="form-label text-primary border-1 border-primary border-bottom">Date</label>
+                <label className="form-label text-dark border-1 border-dark border-bottom">Date</label>
                 <input
                     type="date"
                     className="form-control"
@@ -205,8 +205,8 @@ try {
                     onChange={e => setTodo({ ...todo, dueDate: e.target.value })}
                 />
             </div>
-            {isEditing ? <button onClick={() => saveBtnHandler(editingTaskID)} className="btn btn-primary"> Save </button>
-             : <button onClick={handleFormSubmit} className="btn btn-primary"> Submit </button>}
+            {isEditing ? <button onClick={() => saveBtnHandler(editingTaskID)} className="btn btn-dark"> Save </button>
+             : <button onClick={handleFormSubmit} className="btn btn-dark"> Submit </button>}
             
             
             {/* APPEAR SAVE BTN TO SAVE CHANGES ON UPDATE */}
@@ -222,19 +222,41 @@ try {
                     tasks.map((task) => { // iterate over all tasks and render a div with task data
         
                         const dueDate = new Date(parseInt(task.dueDate)); // Convert dueDate to a Date object
+
+                    const getPriority = (priority) => {
+                        switch (priority) {
+                            case "High":
+                                return "bg-danger";
+                            case "Medium":
+                                return "bg-warning";
+                            case "Low":
+                                return "bg-success";
+                            default:
+                                return "bg-success";
+                        }
+                    };
+
+                    const getPriorityBorder = (priority) => {
+                        switch (priority) {
+                            case "High":
+                                return "border-danger";
+                            case "Medium":
+                                return "border-warning";
+                            case "Low":
+                                return "border-success";
+                            default:
+                                return "border-success";
+                        }
+                    };
                 
                         return (
-                          <div key={task._id} className="note">
-                            <h4 className="card-header bg-primary text-light p-2 m-0">
-                              {task.title} <br />
-                              <span style={{ fontSize: '1rem' }}>
-                                this task due on {dueDate.toLocaleDateString()} priority {task.priority}
-                              </span>
-                            </h4>
-                            <div className="card-body bg-light p-2">
+                          <div key={task._id} className={`note border border-3 rounded-3 ${getPriorityBorder(task.priority)} m-3`}>
+                            <h4 className={`card-header text-light p-2 ${getPriority(task.priority)}`}>
+                              {task.title} on {dueDate.toLocaleDateString()} priority {task.priority}</h4>
+                            <div className={`card-body m-3 border-bottom ${getPriorityBorder(task.priority)}`}>
                               <p>{task.description}</p>
                             </div>
-                            <div>
+                            <div className="m-3">
                               <FaEdit onClick={() => updateBtnHandler(task._id)}/> <FaTrash onClick={() => deleteBtnHandler(task._id)}/>
                             </div>
                           </div>

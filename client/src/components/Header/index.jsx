@@ -18,12 +18,12 @@ const navigate = useNavigate();
 
         return (
         <>
-            <header className="d-flex align-items-center justify-content-around p-3 bg-light">
+            <header className="d-flex align-items-center justify-content-around p-3">
                 <h1>Welcome back, {user.username}!</h1>
                 <button 
-                className="btn btn-block btn-primary"
+                className="btn btn-block btn-dark"
                 onClick={handleBtnClick}>
-                    log out
+                    Log out
                 </button>
             </header>    
         </>
@@ -31,7 +31,7 @@ const navigate = useNavigate();
     } 
     return (
         <>
-            <header className="d-flex align-items-center justify-content-around p-3">
+            <header className="d-flex align-items-center justify-content-around p-3 fs-3">
                 <h1>TO-DO LIST APP</h1>
                 <FaClipboardList />
             </header>    
