@@ -14,7 +14,7 @@ const resolvers = {
         user: async (parent, { username }) => {
             const user = await User.findOne({ username }).populate('tasks');
             if (user) {
-                user.tasks = await Task.find({ createdBy: username });
+                user.tasks = await Task.find({ createdBy: username }).sort({ dueDate: 1 });
             }
             return user;
         },

@@ -44,11 +44,11 @@ const Login = (props) => {
 
     return (
       // if data loads correct redict to home page otherwise shows form again
-        <main className="d-flex flex-column align-items-center justify-content-center" >
+        <main className="d-flex flex-column align-items-center justify-content-center bg-secondary" >
           <div className="col-6">
-            <div className="card">
-              <h4 className="card-header text-center bg-dark text-light p-2">Login</h4>
-              <div className="card-body">
+            <div className="card border border-3 rounded-3 border-dark">
+              <h4 className="card-header text-center bg-dark text-light">Login</h4>
+              <div className="card-body bg-secondary">
                   <form className="d-flex flex-column m-3" onSubmit={handleFormSubmit}>
                     <input
                       className="form-input form-control m-3"
@@ -66,6 +66,9 @@ const Login = (props) => {
                       value={formState.password}
                       onChange={handleChange}
                     />
+
+                    <a className="text-dark fs-6 d-flex align-items-end justify-content-end" href="http://localhost:3000/signup" target="_blank">create account</a>
+
                     <button
                       className="btn btn-dark m-3"
                       type="submit"

@@ -157,15 +157,15 @@ try {
     }
 
     return (
-        <main className="d-flex flex-column justify-content-center">
+        <main className="d-flex flex-column justify-content-center bg-secondary">
             <div className="d-flex flex-column align-items-center justify-content-center">
                 <div className="col-8 border border-3 rounded-3 border-dark m-3">
-                <form className="d-flex flex-column m-3">
+                <form className="d-flex flex-column p-3 bg-secondary">
             <div className="mb-3">
                 <label className="form-label text-dark border-1 border-dark border-bottom">Title</label>
                 <input
                     type="text"
-                    className="form-control"
+                    className="form-control border-dark bg-secondary"
                     placeholder="Title"
                     value={todo.title} // set the value using the input form title added by user
                     onChange={e => setTodo({ ...todo, title: e.target.value })} // update the state when title input changes
@@ -175,7 +175,7 @@ try {
             <div className="mb-3">
                 <label className="form-label text-dark border-1 border-dark border-bottom">Description</label>
                 <textarea
-                    className="form-control"
+                    className="form-control border-dark bg-secondary"
                     placeholder="Description"
                     value={todo.description}
                     onChange={e => setTodo({ ...todo, description: e.target.value })}
@@ -185,7 +185,7 @@ try {
             <div className="mb-3">
                 <label className="form-label text-dark border-1 border-dark border-bottom">Priority</label>
                 <select
-                    className="form-control"
+                    className="form-control border-dark bg-secondary"
                     value={todo.priority}
                     onChange={e => setTodo({ ...todo, priority: e.target.value })}
                 >
@@ -200,7 +200,7 @@ try {
                 <label className="form-label text-dark border-1 border-dark border-bottom">Date</label>
                 <input
                     type="date"
-                    className="form-control"
+                    className="form-control border-dark bg-secondary"
                     value={todo.dueDate}
                     onChange={e => setTodo({ ...todo, dueDate: e.target.value })}
                 />
@@ -250,11 +250,11 @@ try {
                     };
                 
                         return (
-                          <div key={task._id} className={`note border border-3 rounded-3 ${getPriorityBorder(task.priority)} m-3`}>
-                            <h4 className={`card-header text-light p-2 ${getPriority(task.priority)}`}>
+                          <div key={task._id} className={`note border border-3 rounded-3 ${getPriorityBorder(task.priority)} ${getPriority(task.priority)} m-3`}>
+                            <h4 className={`card-header text-dark m-3 border-bottom border-dark`}>
                               {task.title} on {dueDate.toLocaleDateString()} priority {task.priority}</h4>
-                            <div className={`card-body m-3 border-bottom ${getPriorityBorder(task.priority)}`}>
-                              <p>{task.description}</p>
+                            <div className={`card-body m-3 border-bottom border-dark`}>
+                              <p className="text-dark">{task.description}</p>
                             </div>
                             <div className="m-3">
                               <FaEdit onClick={() => updateBtnHandler(task._id)}/> <FaTrash onClick={() => deleteBtnHandler(task._id)}/>

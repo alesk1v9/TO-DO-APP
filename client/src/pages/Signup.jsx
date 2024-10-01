@@ -44,11 +44,11 @@ const Signup = () => {
     };
 
     return (
-        <main className="flex-row justify-center mb-4">
-          <div className="col-12 col-lg-10">
-            <div className="card">
-              <h4 className="card-header bg-dark text-light p-2">Sign Up</h4>
-              <div className="card-body">
+        <main className="d-flex flex-column align-items-center justify-content-center bg-secondary">
+          <div className="col-6">
+            <div className="card border border-3 rounded-3 border-dark">
+              <h4 className="card-header text-center bg-dark text-light">Sign Up</h4>
+              <div className="card-body bg-secondary">
                 {data ? (
                   <p>
                     Success! You may now head{' '}
@@ -56,9 +56,9 @@ const Signup = () => {
                   </p>
                   
                 ) : (
-                  <form onSubmit={handleFormSubmit}>
+                  <form className="d-flex flex-column m-3" onSubmit={handleFormSubmit}>
                     <input
-                      className="form-input"
+                      className="form-input form-control m-3"
                       placeholder="Your username"
                       name="username"
                       type="text"
@@ -66,7 +66,7 @@ const Signup = () => {
                       onChange={handleChange}
                     />
                     <input
-                      className="form-input"
+                      className="form-input form-control m-3"
                       placeholder="Your email"
                       name="email"
                       type="email"
@@ -74,7 +74,7 @@ const Signup = () => {
                       onChange={handleChange}
                     />
                     <input
-                      className="form-input"
+                      className="form-input form-control m-3"
                       placeholder="******"
                       name="password"
                       type="password"
@@ -82,8 +82,7 @@ const Signup = () => {
                       onChange={handleChange}
                     />
                     <button
-                      className="btn btn-block btn-primary"
-                      style={{ cursor: 'pointer' }}
+                      className="btn btn-dark m-3"
                       type="submit"
                     >
                       Submit
