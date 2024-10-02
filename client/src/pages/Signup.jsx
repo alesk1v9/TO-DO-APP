@@ -81,6 +81,9 @@ const Signup = () => {
                       value={formState.password}
                       onChange={handleChange}
                     />
+
+                    <a className="text-dark fs-6 d-flex align-items-end justify-content-end" href="/login" >already have account</a>
+
                     <button
                       className="btn btn-dark m-3"
                       type="submit"
