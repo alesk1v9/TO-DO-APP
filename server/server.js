@@ -3,6 +3,8 @@ const express = require('express');
 const { ApolloServer } = require('@apollo/server');
 const { expressMiddleware } = require('@apollo/server/express4');
 
+const path = require('path');  // For handling file paths
+
 const { typeDefs, resolvers } = require('./schemas');
 
 const db = require('./config/connection');
@@ -12,6 +14,14 @@ const app = express();
 const server = new ApolloServer({
     typeDefs,
     resolvers
+});
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/dist')));  // Adjust the path to your React dist folder
+
+// Serve index.html for any unknown routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
 
 
