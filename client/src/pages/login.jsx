@@ -67,7 +67,7 @@ const Login = (props) => {
                       onChange={handleChange}
                     />
 
-                    <a className="text-dark fs-6 d-flex align-items-end justify-content-end" href="http://localhost:3000/signup" >create account</a>
+                    <a className="text-dark fs-6 d-flex align-items-end justify-content-end" href="/signup" >create account</a>
 
                     <button
                       className="btn btn-dark m-3"
